@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs'); // import bcrypt library
 const User = require('../models/user');
 const { customError, HTTP_STATUS_CODES } = require('../utils/consts');
 
@@ -29,21 +30,23 @@ const getUser = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => res.status(HTTP_STATUS_CODES.CREATED).send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(HTTP_STATUS_CODES.BAD_REQUEST).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
-        });
-      } else {
-        customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'We have encountered an error');
-      }
-    });
+const createUser = async (req, res) => {
+  const { name = 'User', about = 'About', avatar = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y', email, password } = req.body;
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, about, avatar, email, password: hashedPassword });
+    res.status(HTTP_STATUS_CODES.CREATED).send({ data: user });
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      res.status(HTTP_STATUS_CODES.BAD_REQUEST).send({
+        message: `${Object.values(err.errors)
+          .map((error) => error.message)
+          .join(', ')}`,
+      });
+    } else {
+      customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'We have encountered an error');
+    }
+  }
 };
 
 const updateUserData = (req, res) => {
@@ -75,13 +78,30 @@ const updateUser = (req, res) => {
   return updateUserData(req, res);
 };
 
+
+
+
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  if (!avatar) {
-    return customError(res, HTTP_STATUS_CODES.BAD_REQUEST, 'Please update avatar');
-  }
-  return updateUserData(req, res);
+  const id = req.user._id;
+  User.findByIdAndUpdate(id, { avatar }, { new: true, runValidators: true })
+    .orFail(() => {
+      const error = new Error('User ID not found');
+      error.status = HTTP_STATUS_CODES.NOT_FOUND;
+      throw error;
+    })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        customError(res, HTTP_STATUS_CODES.BAD_REQUEST, 'Invalid user ID');
+      } else if (err.status === HTTP_STATUS_CODES.NOT_FOUND) {
+        customError(res, HTTP_STATUS_CODES.NOT_FOUND, 'User ID not found');
+      } else {
+        customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'We have encountered an error');
+      }
+    });
 };
+
 
 module.exports = {
   getUsers,
