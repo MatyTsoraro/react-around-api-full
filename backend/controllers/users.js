@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs'); // import bcrypt library
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { customError, HTTP_STATUS_CODES } = require('../utils/consts');
 
@@ -102,7 +103,21 @@ const updateUser = (req, res) => {
   return updateUserData(req, res);
 };
 
+const User = require('../models/user');
 
+const getUserData = (req, res, next) => {
+  const userId = req.user._id;
+  User.findById(userId)
+    .orFail(() => {
+      const err = new Error('User not found');
+      err.statusCode = 404;
+      throw err;
+    })
+    .then(user => {
+      res.send(user);
+    })
+    .catch(next);
+};
 
 
 const updateAvatar = (req, res) => {
@@ -127,6 +142,7 @@ const updateAvatar = (req, res) => {
 };
 
 
+
 module.exports = {
   getUsers,
   getUser,
@@ -134,4 +150,5 @@ module.exports = {
   updateUser,
   updateAvatar,
   login,
+  getUserData,
 };
