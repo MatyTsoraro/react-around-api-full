@@ -2,6 +2,30 @@ const bcrypt = require('bcryptjs'); // import bcrypt library
 const User = require('../models/user');
 const { customError, HTTP_STATUS_CODES } = require('../utils/consts');
 
+
+const createToken = (userId) => {
+  return jwt.sign({ _id: userId }, process.env.JWT_SECRET, { expiresIn: '7d' });
+};
+
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return customError(res, HTTP_STATUS_CODES.UNAUTHORIZED, 'Invalid email or password');
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return customError(res, HTTP_STATUS_CODES.UNAUTHORIZED, 'Invalid email or password');
+    }
+    const token = createToken(user._id);
+    res.status(HTTP_STATUS_CODES.OK).send({ token });
+  } catch (err) {
+    customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'We have encountered an error');
+  }
+};
+
+
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(HTTP_STATUS_CODES.OK).send({ data: users }))
@@ -109,4 +133,5 @@ module.exports = {
   createUser,
   updateUser,
   updateAvatar,
+  login,
 };
