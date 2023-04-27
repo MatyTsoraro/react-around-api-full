@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { login } from '../utils/auth';
 
 const Login = ({ handleLogin, isLoading }) => {
-  //use state object for email and password
+  const history = useHistory();
+
   const [data, setData] = useState({
     email: '',
     password: '',
   });
 
-  //handle input change
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setToken(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      history.push('/');
+    }
+  }, [token, history]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({
@@ -17,11 +33,20 @@ const Login = ({ handleLogin, isLoading }) => {
     });
   };
 
-  //handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = data;
-    handleLogin({ email, password });
+
+    login(email, password)
+      .then((data) => {
+        const { token } = data;
+        setToken(token);
+        localStorage.setItem('token', token);
+        handleLogin();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

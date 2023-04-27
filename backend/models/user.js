@@ -38,13 +38,13 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'The "Password" field must be filled in.'],
-
-    select: false, // add the select field
+    select: false, // exclude password by default
   },
 });
+
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
-    .select('+password')
+    .select('+password') // include password only for authentication
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Incorrect email or password'));

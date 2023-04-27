@@ -15,12 +15,6 @@ const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { customError } = require('./utils/consts');
 /// ///////////////////////////////////////////////////////////////////
-app.use((req, res, next) => {
-  req.user = {
-    _id: '642336d883cf88e0204620bd',
-  };
-  next();
-});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(userRouter);
