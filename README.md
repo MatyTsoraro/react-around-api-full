@@ -46,5 +46,4 @@ Third party libraries: cors, limiter, helmet, jwt, celebrate, and joi.
 
 **Links**
 
-- [Open app](https://around-us-app-oebn.vercel.app/signin)
-- [API](around-us-app-api.vercel.app)
+https://vercel.com/matytsoraro/react-around-api-full
