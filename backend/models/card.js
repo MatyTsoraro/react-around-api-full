@@ -1,38 +1,35 @@
 const mongoose = require('mongoose');
-const validator = require('validator'); // Import validator library
+const validator = require('validator');
 
-const cardSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, 'The "name" field must be filled in.'],
-      minlength: [2, 'The minimum length of name is 2'],
-      maxlength: [30, 'The maximum length of name is 2'],
-    },
-    link: {
-      type: String,
-      required: [true, 'The "Link" field must be filled in.'],
-      validate: {
-        validator: (value) => validator.isURL(value), // Use validator.isURL to validate URLs
-        message: 'Invalid URL',
-      },
-    },
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
-      required: [true, 'The "Owner" field must be filled in.'],
-    },
-    likes: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
-      default: [],
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+const cardSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 30,
+  },
+  link: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: 'Invalid URL',
     },
   },
-  { versionKey: false },
-);
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+
+    required: [true, 'The "Owner" field must be filled in.'],
+  },
+  likes: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
+    default: [],
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 module.exports = mongoose.model('card', cardSchema);

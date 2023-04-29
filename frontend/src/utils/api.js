@@ -10,72 +10,101 @@ class Api {
     return Promise.reject(`Error ${res.status}`);
   }
 
-  getInitialCards() {
+  getInitialCards(token) {
     return fetch(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
     }).then(this._checkResponse);
   }
-  getUserInfo() {
+
+  getUserInfo(token) {
     return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
     }).then(this._checkResponse);
   }
-  setUserInfo({ name, about }) {
+
+  setUserInfo({ name, about }, token) {
     return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
-      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      method: 'PATCH',
       body: JSON.stringify({
         name: name,
         about: about,
       }),
     }).then(this._checkResponse);
   }
-  createCard(data) {
+
+  createCard(data, token) {
     return fetch(`${this._baseUrl}/cards`, {
-      headers: this._headers,
-      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      method: 'POST',
       body: JSON.stringify(data),
     }).then(this._checkResponse);
   }
-  deleteCard(cardId) {
-    return fetch(`${this._baseUrl}/cards/${cardId}`, {
-      headers: this._headers,
-      method: "DELETE",
+
+  deleteCard(id, token) {
+    return fetch(`${this._baseUrl}/cards/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      method: 'DELETE',
     }).then(this._checkResponse);
   }
 
-  changeLikeCardStatus(cardId, isLiked) {
+  changeLikeCardStatus(id, isLiked, token) {
     if (!isLiked) {
-      return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-        headers: this._headers,
-        method: "DELETE",
+      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${token}`,
+        },
+        method: 'PUT',
       }).then(this._checkResponse);
     } else {
-      return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-        headers: this._headers,
-        method: "PUT",
+      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${token}`,
+        },
+        method: 'DELETE',
       }).then(this._checkResponse);
     }
   }
 
-  setUserAvatar(url) {
+  setUserAvatar(url, token) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
-      headers: this._headers,
-      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      method: 'PATCH',
       body: JSON.stringify({
         avatar: url,
       }),
     }).then(this._checkResponse);
   }
-
-  // other methods for working with the API
 }
 
+let node_env = 'production';
+
+let baseUrl =
+  node_env === 'production'
+    ? 'https://vercel.com/matytsoraro/react-around-api-full'
+    : 'http://localhost:3000';
 const api = new Api({
-  baseUrl: "https://around.nomoreparties.co/v1/cohort-3-en", //cohort-3-en
-  headers: {
-    authorization: "f0c06eb5-f66f-4f1d-b700-3920553239f3",
-    "Content-Type": "application/json",
-  },
+  baseUrl,
 });
+
 export default api;

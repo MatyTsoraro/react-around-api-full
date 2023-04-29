@@ -2,7 +2,7 @@
 
 ### Overview
 
-An introduction to working with Node.js & Express, this project focuse on back-end data management.
+An introduction to working with Node.js & Express, this project focussed on back-end data management.
 
 ### Technologies
 

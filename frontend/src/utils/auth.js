@@ -1,5 +1,9 @@
-const BASE_URL = 'https://register.nomoreparties.co';
+let node_env = 'production';
 
+let BASE_URL =
+  node_env === 'production'
+    ? 'https://around-us-app-api.vercel.app'
+    : 'http://localhost:3000';
 const customFetch = (url, headers) => {
   return fetch(url, headers).then((res) =>
     res.ok ? res.json() : Promise.reject(res.statusText)
@@ -32,7 +36,7 @@ export const checkToken = (token) => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      authorization: `Bearer ${token}`,
     },
   });
 };

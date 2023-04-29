@@ -1,33 +1,50 @@
 const express = require('express');
+const { errors } = require('celebrate');
 const mongoose = require('mongoose');
-const { login, createUser } = require('./controllers/users');
-
+const helmet = require('helmet');
 
 const app = express();
+const cors = require('cors');
+const { limiter } = require('./middleware/limiter');
+require('dotenv').config();
+const errorHandler = require('./middleware/errorHandler');
+const router = require('./routes');
 
 /// ///////////////////////////////////////////////////////////////////
-
-mongoose.connect('mongodb://127.0.0.1:27017/aroundb');
-/// ///////////////////////////////////////////////////////////////////
-
 const { PORT = 3000 } = process.env;
-const userRouter = require('./routes/users');
-const cardRouter = require('./routes/cards');
-const { customError } = require('./utils/consts');
+const { MONGODB_URI = 'mongodb+srv://tamer:h9nYerrjtak3XmKG@cluster0.lkzib1k.mongodb.net/?retryWrites=true&w=majority'
+} = process.env;
+mongoose.connect(MONGODB_URI);
+
 /// ///////////////////////////////////////////////////////////////////
+
+const { requestLogger, errorLogger } = require('./middleware/logger');
+
+app.use(requestLogger); // enabling the request logger
+app.use(limiter);
+app.use(helmet());
+
+/// ///////////////////////////////////////////////////////////////////
+/// ///////////////////////////////////////////////////////////////////
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(userRouter);
-app.use(cardRouter);
-app.post('/signin', login);
-app.post('/signup', createUser);
-app.use((req, res) => {
-  customError(res, 404, 'Requested resource not found');
+app.use(cors());
+app.options('*', cors());
+app.use(router);
+app.use(errorHandler);
+app.use(errors());
+app.use(errorLogger);
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Server will crash now');
+  }, 0);
 });
-/// ///////////////////////////////////////////////////////////////////
 
 /// ///////////////////////////////////////////////////////////////////
 
-app.listen(PORT, () => {
-  console.log(`App listiening on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`App listening on port ${PORT}`);
+  });
+}

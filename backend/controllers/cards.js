@@ -1,108 +1,69 @@
 const Card = require('../models/card');
-const { customError, HTTP_STATUS_CODES } = require('../utils/consts');
+const { processCardWithId } = require('../utils/helpers');
+const ForbiddenError = require('../utils/errors/ForbiddenError');
+const BadRequestError = require('../utils/errors/BadRequestError');
+const NotFoundError = require('../utils/errors/NotFoundError');
 
-const getCards = (req, res) => {
+// GET
+
+const getCards = (req, res, next) => {
   Card.find({})
-    .populate('owner')
-    .then((cards) => res.status(HTTP_STATUS_CODES.OK).send({ data: cards }))
-    .catch(() => customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'We have encountered an error'));
+    .then((cards) => res.send(cards))
+    .catch(next);
 };
 
-const createCard = (req, res) => {
-  const { name, link, likes } = req.body;
+// POST
+const createCard = (req, res, next) => {
+  const { name, link, owner } = req.body;
   const { _id } = req.user;
 
   Card.create({
     name,
     link,
-    likes,
     owner: _id,
   })
-    .then((card) => res.status(HTTP_STATUS_CODES.CREATED).send({ data: card }))
+    .then((card) => res.status(201).send(card)) // changed from data to cards :data
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(HTTP_STATUS_CODES.BAD_REQUEST).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
-        });
+        next(BadRequestError(err.message));
       } else {
-        customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'We have encountered an error');
+        next(err);
       }
     });
 };
 
-const deleteCard = (req, res) => {
-  const { cardId } = req.params;
-  const { _id } = req.user;
-
-  Card.findOne({ _id: cardId })
+const deleteCard = (req, res, next) => {
+  const { id } = req.params;
+  Card.findById(id)
+    .orFail(() => {
+      throw new NotFoundError('Card Not Found');
+    })
     .then((card) => {
-      if (!card) {
-        const error = new Error('Card not found');
-        error.status = HTTP_STATUS_CODES.NOT_FOUND;
-        throw error;
-      }
-
-      if (card.owner.toString() !== _id) {
-        customError(res, HTTP_STATUS_CODES.FORBIDDEN, 'You are not authorized to delete this card');
+      if (card.owner.toString() !== req.user._id) {
+        next(new ForbiddenError('You are not authorized to delete this card'));
       } else {
-        Card.deleteOne({ _id: cardId })
-          .then(() => res.send({ message: 'Card deleted successfully' }))
-          .catch(() => customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'We have encountered an error'));
+        Card.findByIdAndRemove(id).then((deletedCard) =>
+          res.status(200).send(deletedCard)
+        );
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        customError(res, HTTP_STATUS_CODES.BAD_REQUEST, 'Card id is incorrect');
-      } else if (err.status === HTTP_STATUS_CODES.NOT_FOUND) {
-        customError(res, HTTP_STATUS_CODES.NOT_FOUND, 'Card is not found');
-      } else {
-        customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'Something went wrong');
-      }
-    });
+    .catch(next);
 };
-
-const updateLikes = (req, res, operator) => {
-  const { cardId } = req.params;
+// { id = used for card id} , { _id = used for user id}
+const updateLikes = (req, res, next, method) => {
+  const { id } = req.params;
   const { _id } = req.user;
-
-  Card.findOne({ _id: cardId })
-    .then((card) => {
-      if (!card) {
-        const error = new Error('Card not found');
-        error.status = HTTP_STATUS_CODES.NOT_FOUND;
-        throw error;
-      }
-
-      if (card.likes.includes(_id)) {
-        customError(res, HTTP_STATUS_CODES.BAD_REQUEST, 'You have already liked this card');
-      } else {
-        Card.findByIdAndUpdate(
-          cardId,
-          { [operator]: { likes: _id } },
-          { new: true },
-        )
-          .then((updatedCard) => res.send({ data: updatedCard }))
-          .catch(() => customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'We have encountered an error'));
-      }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        customError(res, HTTP_STATUS_CODES.BAD_REQUEST, 'Invalid card id');
-      } else if (err.status === HTTP_STATUS_CODES.NOT_FOUND) {
-        customError(res, HTTP_STATUS_CODES.NOT_FOUND, 'Card not found');
-      } else {
-        customError(res, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR, 'Something went wrong');
-      }
-    });
+  processCardWithId(
+    req,
+    res,
+    Card.findByIdAndUpdate(id, { [method]: { likes: _id } }, { new: true }),
+    next
+  );
 };
 
+const likeCard = (req, res, next) => updateLikes(req, res, next, '$addToSet');
 
-
-const likeCard = (req, res) => updateLikes(req, res, '$addToSet');
-
-const unlikeCard = (req, res) => updateLikes(req, res, '$pull');
+const unlikeCard = (req, res, next) => updateLikes(req, res, next, '$pull');
 
 module.exports = {
   getCards,

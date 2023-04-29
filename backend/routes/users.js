@@ -1,25 +1,21 @@
 const router = require('express').Router();
 const {
   getUsers,
-  getUser,
-  updateUser,
   updateAvatar,
   getCurrentUser,
-  createUser,
-  login,
+  getUserId,
+  updateProfile,
 } = require('../controllers/users');
-const auth = require('../middlewares/auth');
+const {
+  validateProfile,
+  validateAvatar,
+  validateObjectId,
+} = require('../middleware/validation');
 
-// Public routes
-router.post('/users', createUser);
-router.post('/users/login', login);
-
-// Protected routes
-router.use(auth); // middleware for all protected routes
-router.get('/users', getUsers);
-router.get('/users/:userId', getUser);
-router.patch('/users/:userId', updateUser);
-router.patch('/users/:userId/avatar', updateAvatar);
-router.get('/users/me', getCurrentUser);
+router.get('/', getUsers);
+router.get('/me', getCurrentUser);
+router.get('/:id', validateObjectId, getUserId);
+router.patch('/me', validateProfile, updateProfile);
+router.patch('/me/avatar', validateAvatar, updateAvatar);
 
 module.exports = router;

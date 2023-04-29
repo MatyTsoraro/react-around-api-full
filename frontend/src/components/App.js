@@ -13,7 +13,7 @@ import api from '../utils/api';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
-import InfoTooltip from './InfoTooltip';
+import InfoTooltip from './tooltip';
 import * as auth from '../utils/auth';
 
 function App() {
@@ -36,15 +36,19 @@ function App() {
     link: '',
   });
   const [cards, setCards] = useState([]);
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({
+    name: 'Loading..',
+    about: 'Loading..',
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [infoTooltipType, setInfoTooltipType] = useState('');
   //state for loggedIn
   const [loggedIn, setLoggedIn] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem('jwt'));
 
   //state for user data
   const [userData, setUserData] = useState({
-    email: 'email@mail.com',
+    email: '',
   });
   //state for checking token
   const [isCheckingToken, setIsCheckingToken] = useState(true);
@@ -52,48 +56,41 @@ function App() {
   ////////////////////////////////////////////////////////////
   //////////////// UseEffect Hooks ///////////////////////////
   ////////////////////////////////////////////////////////////
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((res) => {
-        setCards(res);
-      })
-      .catch(console.log);
-  }, []);
 
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then((user) => {
-        setCurrentUser(user);
-      })
-      .catch(console.log);
-  }, []);
-  const handleUpdateUser = ({ name, about }) => {
-    setIsLoading(true);
-    api
-      .setUserInfo({ name, about })
-      .then((res) => {
-        setCurrentUser(res);
-        closeAllPopups();
-      })
-      .catch(console.log)
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+    if (token) {
+      api
+        .getInitialCards(token)
+        .then((res) => {
+          setCards(res);
+        })
+        .catch(console.log);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      api
+        .getUserInfo(token)
+        .then((user) => {
+          setCurrentUser(user);
+        })
+        .catch(console.log);
+    }
+  }, [token]);
 
   //check token
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
+    const token = localStorage.getItem('jwt');
+
+    if (token) {
       auth
-        .checkToken(jwt)
+        .checkToken(token)
         .then((res) => {
-          if (res.data._id) {
+          if (res._id) {
             setLoggedIn(true);
-            setUserData({ email: res.data.email });
-            history.push('/react-around-auth');
+            setUserData({ email: res.email });
+            history.push('/');
           }
         })
         .catch((err) => {
@@ -106,7 +103,7 @@ function App() {
     } else {
       setIsCheckingToken(false);
     }
-  }, []);
+  }, [history]);
   ////////////////////////////////////////////////////////////
   //////////////// Event Handlers ///////////////////////////
   ////////////////////////////////////////////////////////////
@@ -143,8 +140,9 @@ function App() {
   function handleCardDelete(e) {
     e.preventDefault();
     setIsLoading(true);
+
     api
-      .deleteCard(selectedCard._id)
+      .deleteCard(selectedCard._id, token)
       .then((res) => {
         const newCards = cards.filter(
           (currentCard) => currentCard._id !== selectedCard._id
@@ -160,7 +158,7 @@ function App() {
   function handleUpdateAvatar(url) {
     setIsLoading(true);
     api
-      .setUserAvatar(url)
+      .setUserAvatar(url, token)
       .then((res) => {
         setCurrentUser(res);
         closeAllPopups();
@@ -170,10 +168,23 @@ function App() {
         setIsLoading(false);
       });
   }
+  const handleUpdateUser = ({ name, about }) => {
+    setIsLoading(true);
+    api
+      .setUserInfo({ name, about }, token)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
+      .catch(console.log)
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   function handleAddPlaceSubmit(card) {
     setIsLoading(true);
     api
-      .createCard(card)
+      .createCard(card, token)
       .then((card) => {
         setCards([card, ...cards]);
         closeAllPopups();
@@ -215,7 +226,8 @@ function App() {
           setLoggedIn(true);
           setUserData({ email });
           localStorage.setItem('jwt', res.token);
-          history.push('/react-around-auth');
+          setToken(res.token);
+          history.push('/');
         }
       })
       .catch((err) => {
@@ -232,14 +244,18 @@ function App() {
   function handleSignout() {
     setLoggedIn(false);
     localStorage.removeItem('jwt');
+    setCurrentUser({
+      name: '',
+      about: '',
+    });
     history.push('/signin');
   }
   function handleCardLike(card) {
     // Check one more time if this card was already liked
-    const isLiked = card.likes.some((user) => user._id === currentUser._id);
+    const isLiked = card.likes.some((user) => user === currentUser._id);
     // Send a request to the API and getting the updated card data
     api
-      .changeLikeCardStatus(card._id, !isLiked)
+      .changeLikeCardStatus(card._id, isLiked, token)
       .then((newCard) => {
         setCards((cards) =>
           cards.map((currentCard) =>
@@ -251,7 +267,7 @@ function App() {
   }
 
   return (
-    <div className='body'>
+    <div className="body">
       <CurrentUserContext.Provider value={currentUser}>
         <Header
           loggedIn={loggedIn}
@@ -261,7 +277,7 @@ function App() {
         <Switch>
           <ProtectedRoute
             exact
-            path='/react-around-auth'
+            path="/"
             loggedIn={loggedIn}
             isCheckingToken={isCheckingToken}
           >
@@ -275,20 +291,16 @@ function App() {
               cards={cards}
             />
           </ProtectedRoute>
-          <Route path='/signup'>
+          <Route path="/signup">
             <Register handleRegister={handleRegister} />
           </Route>
 
-          <Route path='/signin'>
+          <Route path="/signin">
             <Login handleLogin={handleLogin} isLoading={isLoading} />
           </Route>
 
           <Route>
-            {loggedIn ? (
-              <Redirect to='/react-around-auth' />
-            ) : (
-              <Redirect to='/signin' />
-            )}
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
           </Route>
         </Switch>
 
@@ -298,7 +310,7 @@ function App() {
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
           isLoading={isLoading}
-          name='avatar'
+          name="avatar"
         />
         <AddPlacePopup
           isLoading={isLoading}
@@ -326,14 +338,14 @@ function App() {
           card={selectedCard}
           isOpen={isImagePreviewOpen}
           onClose={closeAllPopups}
-          name='popup__preview-container'
+          name="popup__preview-container"
         />
         <InfoTooltip
           isOpen={isInfoTooltipOpen}
           onClose={closeAllPopups}
           type={infoTooltipType}
           isTooltipOpen={isInfoTooltipOpen}
-          name='tooltip'
+          name="tooltip"
         />
       </CurrentUserContext.Provider>
     </div>
