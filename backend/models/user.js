@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
+const { SALT_ROUNDS } = require('../utils/helpers');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -35,14 +37,22 @@ const userSchema = new mongoose.Schema({
       message: 'Valid email is required',
     },
   },
-  password: {
-    type: String,
-    required: [true, 'The "Password" field must be filled in.'],
-
-    select: false, // add the select field
-  },
+  // password: {
+  //   type: String,
+  //   required: [true, 'The "Password" field must be filled in.'],
+  //   select: false, // remove the select field
+  // },
 });
-userSchema.statics.findUserByCredentials = function (email, password) {
+
+userSchema.pre('save', async function hashPassword(next) {
+  if (this.isModified('password')) {
+    const salt = await bcrypt.genSalt(SALT_ROUNDS);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+  next();
+});
+
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return this.findOne({ email })
     .select('+password')
     .then((user) => {
@@ -58,10 +68,21 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
-userSchema.methods.toJSON = function () {
-  const obj = this.toObject();
-  const { password, ...rest } = obj;
-  return rest;
+userSchema.methods.toJSON = function toJSON() {
+  const {
+    _id,
+    name,
+    about,
+    avatar,
+    email,
+  } = this;
+  return {
+    id: _id,
+    name,
+    about,
+    avatar,
+    email,
+  };
 };
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('User', userSchema);

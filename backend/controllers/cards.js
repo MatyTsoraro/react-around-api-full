@@ -5,7 +5,6 @@ const BadRequestError = require('../utils/errors/BadRequestError');
 const NotFoundError = require('../utils/errors/NotFoundError');
 
 // GET
-
 const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
@@ -14,7 +13,7 @@ const getCards = (req, res, next) => {
 
 // POST
 const createCard = (req, res, next) => {
-  const { name, link, owner } = req.body;
+  const { name, link } = req.body;
   const { _id } = req.user;
 
   Card.create({
@@ -22,10 +21,10 @@ const createCard = (req, res, next) => {
     link,
     owner: _id,
   })
-    .then((card) => res.status(201).send(card)) // changed from data to cards :data
+    .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(BadRequestError(err.message));
+        next(new BadRequestError(err.message));
       } else {
         next(err);
       }
@@ -49,6 +48,7 @@ const deleteCard = (req, res, next) => {
     })
     .catch(next);
 };
+
 // { id = used for card id} , { _id = used for user id}
 const updateLikes = (req, res, next, method) => {
   const { id } = req.params;

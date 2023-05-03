@@ -13,7 +13,7 @@ const AddPlacePopup = ({ isLoading, isOpen, onClose, onAddPlaceSubmit }) => {
 
   useEffect(() => {
     setValues({});
-  }, [isOpen]);
+  }, [isOpen, setValues]);
 
   return (
     <PopupWithForm

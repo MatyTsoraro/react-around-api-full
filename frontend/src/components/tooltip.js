@@ -14,7 +14,7 @@ const InfoTooltip = ({ isOpen, onClose, type }) => {
       }, 3500);
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   return (
     <Popup isOpen={isOpen} name='tooltip' onClose={onClose}>
