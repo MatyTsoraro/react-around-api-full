@@ -11,7 +11,7 @@ const errorHandler = require('./middleware/errorHandler');
 const router = require('./routes');
 
 const { PORT = 3000 } = process.env;
-const { MONGODB_URI = 'mongodb://localhost:27017/aroundb' } = process.env;
+const { MONGODB_URI = 'mongodb+srv://maty1981:eytan135@cluster0.gtfinjo.mongodb.net/b' } = process.env;
 
 mongoose.connect(MONGODB_URI);
 
