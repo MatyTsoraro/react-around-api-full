@@ -1,58 +1,75 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-const Register = ({ handleRegister }) => {
-  //use state object for email and password
-  const [data, setData] = useState({
-    email: '',
-    password: '',
-  });
+import FieldForm from "./FieldForm";
 
-  //handle input change
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({
-      ...data,
-      [name]: value,
-    });
-  };
+function Register({ handleRegister, isLoading }) {
+  const [values, setValues] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({});
+  const [readyToSubmit, setReadyToSubmit] = useState(false);
 
-  //handle submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const { email, password } = data;
-    handleRegister({ email, password });
-  };
+  function handleChange(evt) {
+    const name = evt.target.name.split("-").pop();
+    setValues({ ...values, [name]: evt.target.value });
+
+    if (evt.target.validity.valid) {
+      const errorsUpdated = { ...errors, [name]: "" };
+      setErrors(errorsUpdated);
+      const errorsValue = Object.values(errorsUpdated);
+
+      if (errorsValue.length === 2)
+        setReadyToSubmit(!errorsValue.some((i) => i));
+      // If both fields were checked and there is no error, enable submitting
+    } else {
+      setErrors({ ...errors, [name]: evt.target.validationMessage });
+      setReadyToSubmit(false);
+    }
+  }
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    handleRegister(values);
+  }
 
   return (
-    <div className='auth-form'>
-      <h2 className='auth-form__title'>Sign up</h2>
-      <form className='auth-form__form' onSubmit={handleSubmit}>
-        <input
-          type='email'
-          name='email'
-          className='auth-form__input'
-          placeholder='Email'
-          value={data.email}
-          onChange={handleChange}
-        />
-        <input
-          type='password'
-          name='password'
-          className='auth-form__input'
-          placeholder='Password'
-          value={data.password}
-          onChange={handleChange}
+    <div className="auth">
+      <h1 className="auth__title">Sign up</h1>
+      <form className="auth__form" onSubmit={handleSubmit} name="register-form">
+        <FieldForm
+          type="email"
+          name="signup-email"
+          label="Email"
+          minMax={[5, 320]}
+          value={values.email}
+          error={errors.email}
+          handleChange={handleChange}
         />
 
-        <div className='auth-form__footer'>
-          <div className='auth-form__footer-wrapper'>
-            <button type='submit' className='auth-form__submit-button'>
-              Sign up
+        <FieldForm
+          type="password"
+          name="sign-password"
+          label="Password"
+          minMax={[10, 255]}
+          value={values.password}
+          error={errors.password}
+          handleChange={handleChange}
+        />
+
+        <div className="auth__footer">
+          <div className="auth__footer-overlay">
+            <button
+              className={`auth__button ${
+                readyToSubmit ? "" : "form__button_disabled"
+              }`}
+              type="submit"
+              name="login-submit"
+            >
+              {isLoading ? "Loading..." : "Sign up"}
             </button>
-            <p className='auth-form__footer-text'>
-              Already a member?{' '}
-              <Link to='/signin' className='auth-form__footer-link'>
+
+            <p className="auth__footer-subtitle">
+              Already a member?{" "}
+              <Link to="/signin" className="auth__footer-link">
                 Log in here!
               </Link>
             </p>
@@ -61,6 +78,6 @@ const Register = ({ handleRegister }) => {
       </form>
     </div>
   );
-};
+}
 
 export default Register;

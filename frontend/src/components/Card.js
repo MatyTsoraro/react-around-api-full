@@ -1,56 +1,62 @@
-import React, { useContext } from 'react';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import React, { useContext } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-const Card = props => {
+function Card({ card, likesCounter, onCardClick, onCardDelete, onCardLike }) {
   const currentUser = useContext(CurrentUserContext);
-  const isOwn = props.card.owner === currentUser._id;
+  // Checking if the current user is the owner of the current card
+  const isOwn = card.owner === currentUser._id;
 
   // Check if the card was liked by the current user
-  const isLiked = props.card.likes.some(user => user === currentUser._id);
+  const isLiked = card.likes.some((cardId) => cardId === currentUser._id);
 
-  // Create a variable which you then set in `className` for the like button
-  const cardLikeButtonClassName = `card__like-button ${isLiked &&
-    'card__like-button_active'}`;
+  const postcardLikeButtonClassName = `postcard__like-button ${
+    isLiked && "postcard__like-button_active"
+  }`;
+
+  const postcardRemoveButtonClassName = `postcard__remove-button ${
+    isOwn ? "postcard__remove-button_visible" : "postcard__remove-button"
+  }`;
 
   function handleClick() {
-    props.onCardClick(props.card);
+    onCardClick(card);
   }
-  function handleLikeCard() {
-    props.onLikeCard(props.card);
+
+  function handleCardDeleteClick() {
+    onCardDelete(card);
   }
-  function handleDelete() {
-    props.onDeleteClick(props.card);
+
+  function handleLikeClick() {
+    onCardLike(card);
   }
 
   return (
-    <li className="card">
-      {isOwn && (
-        <button
-          type="button"
-          aria-label="delete card"
-          className="card__image-trash"
-          onClick={handleDelete}
-        />
-      )}
+    <li className="postcard" key={card._id}>
+      <button
+        className={postcardRemoveButtonClassName}
+        aria-label="remove postcard"
+        type="button"
+        onClick={handleCardDeleteClick}
+      />
       <img
-        src={props.card.link}
-        alt={props.card.name}
-        className="card__image"
+        className="postcard__image"
+        src={card.link}
+        alt={card.name}
         onClick={handleClick}
       />
-      <div className="card__info">
-        <h2 className="card__info-title">{props.card.name}</h2>
-        <div className="card__like-container">
+      <div className="postcard__title-area">
+        <h2 className="postcard__title">{card.name}</h2>
+        <div className="postcard__like-container">
           <button
-            className={cardLikeButtonClassName}
+            className={postcardLikeButtonClassName}
+            aria-label="like-or-unlike-postcard"
             type="button"
-            aria-label="like card"
-            onClick={handleLikeCard}
+            onClick={handleLikeClick}
           />
-          <span className="card__like-count">{props.card.likes.length}</span>
+          <span className="postcard__like-counter">{likesCounter}</span>
         </div>
       </div>
     </li>
   );
-};
+}
+
 export default Card;

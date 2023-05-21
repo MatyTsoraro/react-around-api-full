@@ -1,49 +1,59 @@
+require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
-const { errors } = require('celebrate');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const helmet = require('helmet');
+const { errors } = require('celebrate');
+
+const bodyParser = require('body-parser');
+const router = require('./routes');
+const errorHandler = require('./middleware/errorHandler');
+
+// const { requestLogger, errorLogger } = require('./middleware/logger');
+
+const { apiLimiter } = require('./utils/rateLimit');
 
 const app = express();
-const { limiter } = require('./middleware/limiter');
-require('dotenv').config();
-const errorHandler = require('./middleware/errorHandler');
-const router = require('./routes');
-
 const { PORT = 3000 } = process.env;
-const { MONGODB_URI = 'mongodb+srv://maty1981:eytan135@cluster0.gtfinjo.mongodb.net/b' } = process.env;
 
-mongoose.connect(MONGODB_URI);
-
-const { requestLogger, errorLogger } = require('./middleware/logger');
-
-app.use(requestLogger);
-app.use(limiter);
 app.use(helmet());
+app.use(apiLimiter);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors());
 app.options('*', cors());
 
-// Add user authentication middleware here
-app.use('/users', require('./middleware/auth'));
+// app.use(requestLogger);
 
-// Routes
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Server will crash now');
-  }, 0);
-});
+// app.get('/crash-test', () => {
+//   setTimeout(() => {
+//     throw new Error('Server will crash now');
+//   }, 0);
+// });
 
 app.use(router);
 
-// Error handling
-app.use(errorLogger);
+// app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
+mongoose
+  .connect(
+    'mongodb+srv://shamoon1997:mongodbatlas123@mongopracticestart.vdf7o.mongodb.net/bnbtest?retryWrites=true&w=majority'
+  )
+  .then(() => {
+    console.log('MongoDB cnnected');
+    app.listen(PORT, () => {
+      console.log(`App listening at port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
   });
-}
+
+// app.listen(PORT, () => {
+//   console.log(`App listening at port ${PORT}`);
+// });

@@ -1,37 +1,61 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-const EditAvatarPopup = ({ isLoading, isOpen, onClose, onUpdateAvatar }) => {
-  const url = useRef();
-  function handleSubmit(e) {
-    e.preventDefault();
-    onUpdateAvatar(url.current.value);
+function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
+  const [isAvatarLinkValid, setIsAvatarLinkValid] = useState(true);
+  const [avatarLinkErrorMessage, setAvatarLinkErrorMessage] = useState("");
+  const avatarRef = useRef();
+
+  useEffect(() => {
+    avatarRef.current.value = "";
+    setIsAvatarLinkValid(true);
+  }, [isOpen]);
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    onUpdateAvatar({
+      avatar: avatarRef.current.value,
+    });
   }
+
+  function handleTestValidity(evt) {
+    setIsAvatarLinkValid(evt.target.validity.valid);
+    setAvatarLinkErrorMessage(avatarRef.current.validationMessage);
+  }
+
   return (
     <PopupWithForm
-      title="Change Profile Picture"
-      name="popup_type_avatar"
+      title="Update Profile Picture"
+      name="avatar"
       isOpen={isOpen}
       onClose={onClose}
-      buttonText={isLoading ? "Saving..." : "Save"}
       onSubmit={handleSubmit}
+      buttonText={isLoading ? "Saving..." : "Save"}
     >
       <fieldset className="form__fieldset">
-        <div className="form__input-container">
-          <input
-            id="avatar-input"
-            type="url"
-            name="link"
-            placeholder="Profile Image link"
-            className="form__input form__input_type_avatar"
-            required
-            ref={url}
-          />
-          <span className="form__input-error avatar-input-error" />
-        </div>
+        <input
+          ref={avatarRef}
+          className={`form__input ${
+            !isAvatarLinkValid && `form__input_type_error`
+          }`}
+          type="url"
+          name="link"
+          id="input-avatar"
+          placeholder="User Image Url"
+          onChange={handleTestValidity}
+          required
+        />
+        <span
+          className={`form__input-error ${
+            !isAvatarLinkValid && `form__input-error_visible`
+          }`}
+          id="input-avatar-error"
+        >
+          {avatarLinkErrorMessage}
+        </span>
       </fieldset>
     </PopupWithForm>
   );
-};
+}
 
 export default EditAvatarPopup;

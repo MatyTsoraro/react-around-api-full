@@ -14,14 +14,14 @@ const validateAuthentication = celebrate({
     email: Joi.string()
       .required()
       .email()
-      .message('Valid email is required')
+      .message('Please enter a valid email')
       .messages({
         'string.required': 'Email is required',
-        'string.email': 'Valid email is required',
+        'string.email': 'Please enter a valid email',
       }),
     password: Joi.string().required().min(8).messages({
       'string.empty': 'Password is required',
-      'string.min': 'Password must be at least 8 characters ',
+      'string.min': 'Please lengthen this password to 8 characters or more',
     }),
   }),
 });
@@ -29,77 +29,75 @@ const validateAuthentication = celebrate({
 const validateUserBody = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Name must be at least 2 characters ',
-      'string.max': 'Name must be less than 30 characters ',
+      'string.min': 'Please lengthen this text to 2 characters or more',
+      'string.max': 'Please lengthen this text to 30 characters or less',
     }),
     about: Joi.string().min(2).max(30).messages({
-      'string.min': 'About must be at least 2 characters ',
-      'string.max': 'About must be less than 30 characters ',
+      'string.min': 'Please lengthen this text to 2 characters or more',
+      'string.max': 'Please lengthen this text to 30 characters or less',
     }),
     avatar: Joi.string()
       .custom(validateURL)
-      .message('Invalid URL for avatar link'),
+      .message('Please enter a valid URL for the avatar'),
     email: Joi.string()
       .required()
       .email()
-      .message('Valid email is required')
+      .message('Please enter a valid email')
       .messages({
         'string.required': 'Email is required',
-        'string.email': 'Valid email is required',
+        'string.email': 'Please enter a valid email',
       }),
     password: Joi.string().required().min(8).messages({
       'string.empty': 'Password is required',
-      'string.min': 'Password must be at least 8 characters ',
+      'string.min': 'Please lengthen this password to 8 characters or more',
     }),
   }),
 });
 
-const validateProfile = celebrate({
+const validateUserProfile = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Name must be at least 2 characters ',
-      'string.max': 'Name must be less than 30 characters ',
+      'string.min': 'Please lengthen this text to 2 characters or more',
+      'string.max': 'Please lengthen this text to 30 characters or less',
     }),
     about: Joi.string().min(2).max(30).messages({
-      'string.min': 'About must be at least 2 characters ',
-      'string.max': 'About must be less than 30 characters ',
+      'string.min': 'Please lengthen this text to 2 characters or more',
+      'string.max': 'Please lengthen this text to 30 characters or less',
     }),
   }),
 });
 
-const validateAvatar = celebrate({
+const validateUserAvatar = celebrate({
   body: Joi.object().keys({
     avatar: Joi.string()
       .custom(validateURL)
-      .message('Invalid URL for avatar link'),
+      .message('Please enter a valid URL for the avatar'),
   }),
 });
 
-// validate the params id
 const validateObjectId = celebrate({
   params: Joi.object().keys({
-    id: Joi.string()
+    _id: Joi.string()
       .required()
       .custom((value, helpers) => {
         if (ObjectId.isValid(value)) {
           return value;
         }
-        return helpers.message('Invalid id');
+        return helpers.message('Sorry, it is invalid id');
       }),
   }),
 });
 
 const validateCardBody = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30)
-      .messages({
-        'string.empty': 'Name is required',
-        'string.min': 'Name must be at least 2 characters ',
-        'string.max': 'Name must be less than 30 characters ',
-      }),
+    name: Joi.string().required().min(2).max(30).messages({
+      'string.empty': 'A name is required',
+      'string.min': 'Please lengthen this text to 2 characters or more',
+      'string.max': 'Please lengthen this text to 30 characters or less',
+    }),
     link: Joi.string().required().custom(validateURL).messages({
-      'string.empty': 'Link is required',
-      'string.uri': 'Invalid URL for card link',
+      'string.empty': 'Please enter a URL',
+      'string.uri': 'Please enter a valid URL for picture',
     }),
   }),
 });
@@ -107,8 +105,8 @@ const validateCardBody = celebrate({
 module.exports = {
   validateAuthentication,
   validateUserBody,
-  validateProfile,
-  validateAvatar,
+  validateUserProfile,
+  validateUserAvatar,
   validateObjectId,
   validateCardBody,
 };

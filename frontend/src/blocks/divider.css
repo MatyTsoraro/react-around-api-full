@@ -1,0 +1,11 @@
+.divider {
+  opacity: 0.7;
+  border-bottom: 1px solid #545454;
+  width: 100%;
+  margin-top: 36px;
+}
+
+.divider_type_mobile-dropdown {
+  margin-top: 0;
+  /* margin-bottom: 36px; */
+}

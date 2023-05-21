@@ -1,30 +1,66 @@
-import React from 'react';
-import Popup from './Popup';
+import React, { useEffect, useRef, useState } from "react";
 
-const PopupWithForm = (props) => {
+function PopupWithForm({
+  name,
+  isOpen,
+  onClose,
+  title,
+  children,
+  buttonText,
+  onSubmit,
+  isTooltipOpen,
+}) {
+  const formRef = useRef();
+  const [isFormValids, setIsFormValids] = useState(false);
+
+  useEffect(() => {
+    setIsFormValids(formRef.current.checkValidity());
+  }, [isOpen, formRef]);
+
+  function handleFormChange() {
+    setIsFormValids(formRef.current.checkValidity());
+  }
+
   return (
-    <Popup isOpen={props.isOpen} name={props.name} onClose={props.onClose}>
-      <h2 className={`popup__title popup__title_type_${props.name}`}>
-        {props.title}
-      </h2>
-      <form
-        action='submit'
-        className='form popup__form'
-        name={props.name}
-        onSubmit={props.onSubmit}
-      >
-        {props.children}
-        <fieldset className='form__fieldset'>
-          <button
-            className={`form__button form__button_type_${props.name}`}
-            type='submit'
-          >
-            {props.buttonText}
-          </button>
-        </fieldset>
-      </form>
-    </Popup>
+    <div
+      className={`popup popup_type_${name} ${isOpen ? "popup_receptive" : ""}`}
+    >
+      <div className={`popup__overlay popup__overlay_type_${name}`}>
+        <button
+          className={`popup__close-button popup__close-button_type_${name}`}
+          type="button"
+          aria-label="close-delete-modal"
+          onClick={onClose}
+        />
+
+        <h2 className={`popup__title popup__title_type_${name}`}>{title}</h2>
+        <form
+          action="#"
+          className="form popup__form"
+          onSubmit={onSubmit}
+          onChange={handleFormChange}
+          name={name}
+          ref={formRef}
+          noValidate
+        >
+          {children}
+
+          {!isTooltipOpen && (
+            <fieldset className="form__fieldset">
+              <button
+                className={`form__button ${
+                  !isFormValids && `form__button_disabled`
+                } form__button_type_${name}`}
+                type="submit"
+              >
+                {buttonText}
+              </button>
+            </fieldset>
+          )}
+        </form>
+      </div>
+    </div>
   );
-};
+}
 
 export default PopupWithForm;

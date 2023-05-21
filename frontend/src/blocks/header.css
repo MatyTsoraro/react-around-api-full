@@ -1,122 +1,161 @@
+/* .header {
+  max-width: 880px;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  display: flex;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 40px 0px;
+} */
+
 .header {
-    max-width: 90%;
-    width: 880px;
-    margin: 0 auto 0;
-    border-bottom: rgba(84, 84, 84, 0.7) solid 1px;
-    padding: 45px 0 0 0;
+  max-width: 880px;
+  margin: 45px auto 0;
 }
 
-.header__container {
-    display: flex;
-    justify-content: space-between;
+.header__overlay {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 36px;
 }
 
 .header__logo {
-    max-width: 173px;
-    max-height: 33px;
-    margin-bottom: 41px;
-    padding: 0;
+  max-width: 173px;
+  max-height: 33px;
+  /* margin-bottom: 41px; */
 }
 
-.header__menu-button {
-    background: transparent;
-    border: none;
-    display: none;
-    cursor: pointer;
+.header__mobile-dropdown {
+  display: none;
 }
 
-.header__mobile-menu {
-    display: none;
-}
-
-.header__mobile-menu_opened {
-    display: flex;
-    flex-direction: column;
-}
-
-.header__close-icon {
-    width: 25px;
+.header__mobile-dropdown_receptive {
+  display: flex;
+  flex-direction: column;
 }
 
 .header__links {
-    display: flex;
-    flex-direction: row-reverse;
-    max-width: 100%;
-    gap: 24px;
-    padding: 0;
-    list-style: none;
-    color: white;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 24px;
+  list-style: none;
 }
 
-.header__links_mobile {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    max-width: 100%;
+.header__links-item {
+  color: #fff;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  margin: 0;
+  text-align: right;
+}
+
+.header__links_mobile-dropdown {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .header__link {
-    color: white;
-    text-decoration: none;
-    padding: 0;
-    transition: opacity 0.3s ease-in-out;
+  color: #ffffff;
+  font-family: "Inter", Arial, sans-serif;
+  text-decoration: none;
+  transition: opacity 0.4s linear;
+  font-size: 18px;
+  line-height: 22px;
 }
 
 .header__link:hover {
-    opacity: 0.6;
+  opacity: 0.6;
+  cursor: url("../images/pointer.svg"), pointer;
 }
 
-.header__menu-button {
-    background: transparent;
-    border: none;
-    display: none;
-    cursor: pointer;
+.header__dropdown-button {
+  /* cursor: pointer; */
+  display: none;
+  border: none;
+  background-color: transparent;
+  width: 24px;
+  height: 18px;
+  transition: opacity 0.4s linear;
+  padding: 0;
 }
 
-.header__mobile-menu {
-    display: none;
-}
-
-.header__mobile-menu_opened {
-    display: flex;
-    flex-direction: column;
+.header__dropdown-button:hover {
+  opacity: 0.6;
+  cursor: url("../images/pointer.svg"), pointer;
 }
 
 .header__close-icon {
-    width: 25px;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  right: 2px;
 }
 
-@media screen and (max-width: 895px) {
-    .header_navbar {
-        padding-right: 30px;
-    }
+@media screen and (min-width: 769px) {
+  .header__mobile-dropdown {
+    display: none;
+  }
+
+  .header__link-item {
+    color: #fff;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    margin: 0;
+    text-align: right;
+  }
 }
 
-@media screen and (max-width: 524px) {
-    .header {
-        max-width: 100%;
-        margin-top: 28px;
-        padding: 0;
-    }
+@media screen and (max-width: 768px) {
+  .header__dropdown-button {
+    display: block;
+  }
 
-    .header__logo {
-        max-width: 126px;
-        max-height: 24px;
-        margin: 0 auto 0 20px;
-    }
+  .header__links_desktop {
+    display: none;
+  }
 
-    .header_navbar {
-        padding-right: 15px;
-    }
+  .header__links_signup-login-homepage {
+    display: block;
+  }
+}
 
-    .header__links {
-        flex-direction: column-reverse;
-    }
+@media screen and (min-width: 320px) and (max-width: 619px) {
+  .header {
+    max-width: calc(100vw + 19px);
+    padding-top: 38px;
+  }
+}
 
-    .header__link-item {
-        text-align: right;
-    }
+@media screen and (max-width: 320px) {
+  .header {
+    max-width: 320px;
+    padding-top: 28px;
+  }
 
+  .header__logo {
+    max-width: 126px;
+    max-height: 24px;
+    /* margin-bottom: 32px;
+    margin-left: 27px; */
+  }
 
+  .header__link {
+    font-size: 17px;
+    line-height: 17px;
+  }
+
+  .header__close-icon {
+    bottom: 5px;
+  }
 }

@@ -1,8 +1,8 @@
 {
   "name": "around-express",
   "version": "1.0.0",
-  "description": "An introduction to working with Node.js & Express, this project focuses on back-end data management.",
-  "main": "index.js",
+  "description": "Project 12th in Back End working with server: working with databases, setting up testing and security and deploying it on a remote machine. Main goal is to create a server with full API and authorization.",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint .",
@@ -11,33 +11,41 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MatyTsoraro/around-express.git"
+    "url": "git+https://github.com/Chen-Abudi/around-express.git"
   },
-  "author": "Maty Tsoraro",
+  "keywords": [
+    "practicum",
+    "express",
+    "nodejs",
+    "back end",
+    "server"
+  ],
+  "author": "Chen Abudi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MatyTsoraro/around-express/issues"
+    "url": "https://github.com/Chen-Abudi/around-express/issues"
   },
-  "homepage": "https://github.com/MatyTsoraro/around-express#readme",
-  "devDependencies": {
-    "@babel/eslint-parser": "^7.19.1",
-    "eslint": "^8.36.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "nodemon": "^2.0.21"
-  },
+  "homepage": "https://github.com/Chen-Abudi/around-express#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
     "celebrate": "^15.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-rate-limit": "^6.7.0",
+    "express": "^4.18.1",
+    "express-rate-limit": "^6.6.0",
     "express-winston": "^4.2.0",
-    "helmet": "^6.1.5",
+    "helmet": "^5.1.1",
+    "joi": "^17.6.2",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.3",
-    "validator": "^13.9.0",
+    "mongoose": "^6.5.4",
+    "validator": "^13.7.0",
     "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.19"
   }
 }

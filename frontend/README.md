@@ -1,34 +1,63 @@
-# Project 14: Around the U.S. authentication and authorization — specifically front-end authorization in React.
+# 🌎 Project 14: React Around Auth
 
-##
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-This about authorization and registration on the frontend with React.
-authorization\registration\token requests all go through to the server running on https://register.nomoreparties.co.
+# Overview:
 
-### Project Idea:
+- Intro
+- Languages & Techniques
+- Images
+- Figma Design
+- Possible Improvements
+- Deployed Project
 
-To protect the site with a protected route that will only show if the user is logged in.user can view only if :
+## Intro
 
-- new visitor and registered into the signup form, and then logged in with the same credentials in the login form
-- returning visitor, and a jwt token that is stored in the users localStorage is verified and returns valid information. If not, then the token was changed.
+This is an responsive web application that showcases a person's travel around the U.S. It has the ability of adding, sharing or even removing photos, liking/disliking, changing profile info and picture with _RESTful API_. An important addition to this incredible application is **Security** for the homepage which includes Identication, Authentication and Authorization.
 
-When the user login:
+### 🗝️ This React project is an optimized iteration of a :
 
-- will be shown an information tooltip that will inform them of the login status whether it succceeded or failed
-- In the event of successful login, the user will also be redirected to the homepage.
+### _[Around React](https://chen-abudi.github.io/around-react/)_
 
-#### Design File Used:
+### _[Around the U.S](https://chen-abudi.github.io/web_project_4/)_
 
-[Figma](https://www.figma.com/file/yXGGl4EnWYEPzGJU2dSJ1L/Sprint-14-Registration-and-Authorization?node-id=0%3A1)
+## Languages & Techniques
 
-### Project features
+- ReactJS
+- Javascript
+- Identication, Authentication, Authorization
+- Data manipulation in localStorage.
+- CSS3 - Grid, flex, forms, animation etc.
+- React Hooks, Global State
+- Adaptive layout
+- Flat BEM file structure
+- OOP, DOM manipulation
+- REST API requests
 
-1. React JS
-2. Authentication, Authorization, Identication
-3. Javascript
-4. ES6
-5. localStorage data manipulation
+## Images
 
+- [For more incredible images, feel free to Click Here !](https://unsplash.com/)
 
+## Figma Design :
 
-## Developer: Maty Tsoraro
+- [Check this lovely design !](https://www.figma.com/file/yXGGl4EnWYEPzGJU2dSJ1L/Sprint-14%3A-Registration-and-Authorization?node-id=1%3A352)
+
+## Possible Improvements
+
+- Optimize it for disable people.
+- Building my own API and connecting it to the server.
+- To show any visitor the relevant content depending of their access.
+- Maximize the security.
+- Optimizie the page speed.
+
+**All authorization, registration and token requests must go through to the server running on** [https://register.nomoreparties.co](https://register.nomoreparties.co/).
+
+# Deployed Project :
+
+[React Around Auth](https://chen-abudi.github.io/react-around-auth/)
+
+### **Check out My LinkedIn Profile**
+
+[LinkedIn](https://www.linkedin.com/in/chen-abudi/)
+
+## Enjoy!

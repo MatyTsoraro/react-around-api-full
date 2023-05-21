@@ -1,15 +1,26 @@
-.tooltip__image {
-    width: 120px;
-    margin: 0 auto;
+.tooltip__icon {
+  margin: 26px auto 32px;
+  background-size: 120px 120px;
+  /* width: 120px; */
 }
 
-.tooltip__text {
-    font-size: 24px;
-    font-weight: 900;
-    line-height: 30px;
-    padding: 0;
-    margin: 0 auto;
-    text-align: center;
-    width: 358px;
-    max-width: 100%;
+.tooltip__message {
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29.05px;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (max-width: 916px) {
+  .tooltip__icon {
+    margin: 26px auto 35px;
+  }
+}
+
+@media screen and (max-width: 524px) {
+  .tooltip__icon {
+    margin: 0 auto 40px;
+  }
 }

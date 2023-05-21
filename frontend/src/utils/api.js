@@ -1,110 +1,83 @@
+import { baseUrl, headers } from "./constants";
+
 class Api {
   constructor({ baseUrl, headers }) {
-    this._baseUrl = baseUrl;
-    this._headers = headers;
+    this.baseUrl = baseUrl;
+    this.headers = headers;
   }
-  _checkResponse(res) {
+
+  _processResponse(res) {
     if (res.ok) {
       return res.json();
+    } else {
+      return Promise.reject(`An error just occurred: ${res.status}`);
     }
-    return Promise.reject(`Error ${res.status}`);
   }
 
-  getInitialCards(token) {
-    return fetch(`${this._baseUrl}/cards`, {
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-    }).then(this._checkResponse);
+  // When the user logs in or logs out, update the user token in the request header.
+  updatedAuthUserToken = (token) => {
+    this.headers = { ...this.headers, authorization: `Bearer ${token}` };
+  };
+
+  getInitialcards() {
+    return fetch(`${this.baseUrl}/cards`, {
+      method: "GET",
+      headers: this.headers,
+    }).then(this._processResponse);
   }
 
-  getUserInfo(token) {
-    return fetch(`${this._baseUrl}/users/me`, {
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-    }).then(this._checkResponse);
+  getUserInfo() {
+    return fetch(`${this.baseUrl}/users/me`, {
+      method: "GET",
+      headers: this.headers,
+    }).then(this._processResponse);
   }
 
-  setUserInfo({ name, about }, token) {
-    return fetch(`${this._baseUrl}/users/me`, {
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-      method: 'PATCH',
+  setUserInfo({ name, about }) {
+    return fetch(`${this.baseUrl}/users/me`, {
+      method: "PATCH",
+      headers: this.headers,
       body: JSON.stringify({
         name: name,
         about: about,
       }),
-    }).then(this._checkResponse);
+    }).then(this._processResponse);
   }
 
-  createCard(data, token) {
-    return fetch(`${this._baseUrl}/cards`, {
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-      method: 'POST',
-      body: JSON.stringify(data),
-    }).then(this._checkResponse);
-  }
-
-  deleteCard(id, token) {
-    return fetch(`${this._baseUrl}/cards/${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-      method: 'DELETE',
-    }).then(this._checkResponse);
-  }
-
-  changeLikeCardStatus(id, isLiked, token) {
-    if (!isLiked) {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${token}`,
-        },
-        method: 'PUT',
-      }).then(this._checkResponse);
-    } else {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${token}`,
-        },
-        method: 'DELETE',
-      }).then(this._checkResponse);
-    }
-  }
-
-  setUserAvatar(url, token) {
-    return fetch(`${this._baseUrl}/users/me/avatar`, {
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${token}`,
-      },
-      method: 'PATCH',
+  setUserAvatar({ avatar }) {
+    return fetch(`${this.baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: this.headers,
       body: JSON.stringify({
-        avatar: url,
+        avatar,
       }),
-    }).then(this._checkResponse);
+    }).then(this._processResponse);
+  }
+
+  addCard(data) {
+    return fetch(`${this.baseUrl}/cards`, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify(data),
+    }).then(this._processResponse);
+  }
+
+  removeCard(id) {
+    return fetch(`${this.baseUrl}/cards/${id}`, {
+      method: "DELETE",
+      headers: this.headers,
+    }).then(this._processResponse);
+  }
+
+  cardLike(id, isLiked) {
+    const method = isLiked ? "DELETE" : "PUT";
+    return fetch(`${this.baseUrl}/cards/${id}/likes`, {
+      method: method,
+      headers: this.headers,
+    }).then(this._processResponse);
   }
 }
 
-let node_env = 'production';
-
-let baseUrl =
-  node_env === 'production'
-    ? 'https://vercel.com/matytsoraro/react-around-api-full'
-    : 'http://localhost:3000';
-const api = new Api({
-  baseUrl,
-});
+const api = new Api({ baseUrl, headers });
 
 export default api;
