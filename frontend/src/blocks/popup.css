@@ -1,220 +1,151 @@
 .popup {
-  background-color: rgba(0, 0, 0, 0.5);
-  font-family: "Inter", Arial, sans-serif;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.4s ease-in-out;
+    position: fixed;
+    /* min-width: 400px; */
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.22;
+    display: flex;
+    visibility: hidden;
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.45s ease-in-out;
 }
 
-.popup_type_tooltip {
-  text-align: center;
+.popup_type_avatar {
+    display: flex;
+    flex-direction: column;
 }
 
-.popup_receptive {
-  visibility: visible;
-  opacity: 1;
-  z-index: 8;
+.popup_opened {
+    visibility: visible;
+    transition: visibility 0s,
+        opacity 0.5s linear;
+    pointer-events: all;
+    opacity: 1;
 }
 
-.popup__overlay {
-  background-color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  gap: 54px;
-  justify-content: center;
-  padding: 34px 36px 36.51px;
-  border-radius: 10px;
-  position: relative;
+
+.popup__container {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    padding: 34px;
+    border-radius: 10px;
+    position: relative;
+    max-width: 100%;
+
+}
+
+.popup-type-delete-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+.popup__preview-container {
+    padding: 0px;
+    background-color: transparent;
+    color: #fff;
+    gap: 10px;
+    display: flex;
+    position: relative;
+    justify-content: baseline;
+    flex-direction: column;
+    z-index: -1;
+}
+
+.popup-edit-profile {
+    overflow: visible;
 }
 
 .popup__close-button {
-  background-image: url("../images/close-icon.svg");
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 33px 33px;
-  border: none;
-  cursor: url("../images/pointer.svg"), pointer;
-  width: 40px;
-  height: 40px;
-  align-self: flex-end;
-  padding: 0;
-  transition: all 0.4s linear;
-  position: absolute;
-  top: -40px;
-  right: -40px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    background-color: transparent;
+    background-image: url("../images/icons/close_icon.svg");
+    background-repeat: no-repeat;
+    border: none;
+    /* display: flex;
+    margin: 0 0 0 auto; */
+    overflow: visible;
+    min-height: 30px;
+    min-width: 30px;
+    padding: 0 0 2em 1.8em;
+    position: absolute;
+    top: -38px;
+    right: -30px;
+
 }
 
 .popup__close-button:hover {
-  opacity: 0.6;
-  transform: rotateY(180deg) rotate(90deg);
+    opacity: 0.6;
 }
 
 .popup__title {
-  padding: 0;
-  font-style: normal;
-  font-weight: 900;
-  font-size: 24px;
-  line-height: 29px;
-  color: #000;
-  margin: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+    line-height: 1.2;
+    font-weight: 900;
 }
 
-.popup__title_type_tooltip {
-  font-weight: 900;
-  font-size: 24px;
-  line-height: 29.05px;
-}
 
-.popup__overlay_type_image-exhibit {
-  background-color: transparent;
-  color: #ffffff;
-  gap: 10px;
-  padding: 0;
-}
-
-.popup__overlay_type_tooltip {
-  gap: 0;
-}
 
 .popup__image {
-  width: 100%;
-  max-width: 75vw;
-  max-height: 75vh;
+    width: 100%;
+    max-height: 75vh;
+    max-width: 75vw;
+
 }
 
 .popup__caption {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 15px;
-  margin: 0;
+    margin: 0;
+    font-size: 12px;
+    line-height: 15px;
 }
 
-.popup__overlay_type_remove-postcard {
-  gap: 38px;
-  padding: 34px 36px 36px 36px;
-}
+@media screen and (max-width: 570px) {
+    .popup__close-button {
+        background-size: 20px 20px;
+        top: -30px;
+        right: -20px;
+    }
 
-@media screen and (max-width: 524px) {
-  .popup {
-    box-sizing: border-box;
-    padding-right: 19px;
-    padding-left: 19px;
-  }
-
-  .popup__overlay {
-    max-width: 282px;
-    padding: 25px 22px;
-    gap: 65px;
-  }
-
-  .popup__close-button {
-    top: -49px;
-    right: 7px;
-  }
-
-  .popup__close-button_type_tooltip {
-    transform: translate(-10px);
-    width: 30px;
-    left: 50%;
-    top: -65px;
-  }
-
-  .popup__title {
-    font-size: 18px;
-    line-height: 22px;
-  }
-
-  .popup__overlay_type_image-exhibit {
-    max-width: 75vw;
-    gap: 10px;
-    padding: 0;
-  }
-
-  .popup__overlay_type_tooltip {
-    gap: 0;
-    padding-top: 50px;
-    max-width: 280px;
-  }
-
-  .popup__close-button_type_image-ex {
-    top: -40px;
-    right: -40px;
-  }
-
-  .popup__overlay_type_remove-postcard {
-    gap: 36px;
-  }
-
-  .popup__title_type_remove-postcard {
-    text-align: center;
-    font-size: 21px;
-  }
-
-  .popup__overlay_type_success {
-    padding: 50px 18px;
-  }
-
-  .popup__success {
-    margin-bottom: 40px;
-  }
-
-  .popup__message {
-    font-size: 20px;
-    line-height: 24px;
-  }
-}
-
-@media screen and (max-width: 425px) {
-  .popup__overlay {
-    width: 282px;
-    margin-top: 100px;
-  }
-
-  .popup__close-button {
-    background-size: 25px 25px;
-    width: 35px;
-    height: 35px;
-    margin-top: 0;
-    margin-bottom: 13.62px;
-  }
-
-  .popup__close-button_type_tooltip {
-    background-size: 35px 35px;
-  }
+    .popup__container {
+        gap: 76px;
+        padding: 25px 22px;
+        max-width: 280px;
+    }
 }
 
 @media screen and (max-width: 320px) {
-  .popup__overlay {
-    gap: 76px;
-  }
+    .popup {
+        max-width: 282px;
+        padding: 0 19px;
 
-  .popup__overlay_type_tooltip {
-    gap: 0;
-  }
+    }
 
-  .popup__overlay_type_image-exhibit {
-    gap: 10px;
-    margin: 0;
-  }
+    .popup__container {
+        gap: 76px;
+        padding: 25px 22px;
+        max-width: 280px;
+    }
 
-  .popup__close-button_type_image-ex {
-    right: -30px;
-    top: -30px;
-    width: 30px;
-    height: 30px;
-  }
-
-  .popup__overlay_type_remove-postcard {
-    gap: 33px;
-  }
+    .popup__title {
+        font-weight: 900;
+        font-size: 18px;
+        line-height: 22px;
+    }
 }

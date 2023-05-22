@@ -1,63 +1,71 @@
-# 🌎 Project 14: React Around Auth
+# Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-# Overview:
+## Available Scripts
 
-- Intro
-- Languages & Techniques
-- Images
-- Figma Design
-- Possible Improvements
-- Deployed Project
+In the project directory, you can run:
 
-## Intro
+### `npm start`
 
-This is an responsive web application that showcases a person's travel around the U.S. It has the ability of adding, sharing or even removing photos, liking/disliking, changing profile info and picture with _RESTful API_. An important addition to this incredible application is **Security** for the homepage which includes Identication, Authentication and Authorization.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### 🗝️ This React project is an optimized iteration of a :
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-### _[Around React](https://chen-abudi.github.io/around-react/)_
+### `npm test`
 
-### _[Around the U.S](https://chen-abudi.github.io/web_project_4/)_
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## Languages & Techniques
+### `npm run build`
 
-- ReactJS
-- Javascript
-- Identication, Authentication, Authorization
-- Data manipulation in localStorage.
-- CSS3 - Grid, flex, forms, animation etc.
-- React Hooks, Global State
-- Adaptive layout
-- Flat BEM file structure
-- OOP, DOM manipulation
-- REST API requests
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-## Images
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-- [For more incredible images, feel free to Click Here !](https://unsplash.com/)
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Figma Design :
+### `npm run eject`
 
-- [Check this lovely design !](https://www.figma.com/file/yXGGl4EnWYEPzGJU2dSJ1L/Sprint-14%3A-Registration-and-Authorization?node-id=1%3A352)
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-## Possible Improvements
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-- Optimize it for disable people.
-- Building my own API and connecting it to the server.
-- To show any visitor the relevant content depending of their access.
-- Maximize the security.
-- Optimizie the page speed.
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-**All authorization, registration and token requests must go through to the server running on** [https://register.nomoreparties.co](https://register.nomoreparties.co/).
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-# Deployed Project :
+## Learn More
 
-[React Around Auth](https://chen-abudi.github.io/react-around-auth/)
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-### **Check out My LinkedIn Profile**
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-[LinkedIn](https://www.linkedin.com/in/chen-abudi/)
+### Code Splitting
 
-## Enjoy!
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#

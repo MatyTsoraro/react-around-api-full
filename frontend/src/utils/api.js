@@ -1,83 +1,81 @@
-import { baseUrl, headers } from "./constants";
-
 class Api {
   constructor({ baseUrl, headers }) {
-    this.baseUrl = baseUrl;
-    this.headers = headers;
+    this._baseUrl = baseUrl;
+    this._headers = headers;
   }
-
-  _processResponse(res) {
+  _checkResponse(res) {
     if (res.ok) {
       return res.json();
-    } else {
-      return Promise.reject(`An error just occurred: ${res.status}`);
     }
+    return Promise.reject(`Error ${res.status}`);
   }
 
-  // When the user logs in or logs out, update the user token in the request header.
-  updatedAuthUserToken = (token) => {
-    this.headers = { ...this.headers, authorization: `Bearer ${token}` };
-  };
-
-  getInitialcards() {
-    return fetch(`${this.baseUrl}/cards`, {
-      method: "GET",
-      headers: this.headers,
-    }).then(this._processResponse);
+  getInitialCards() {
+    return fetch(`${this._baseUrl}/cards`, {
+      headers: this._headers,
+    }).then(this._checkResponse);
   }
-
   getUserInfo() {
-    return fetch(`${this.baseUrl}/users/me`, {
-      method: "GET",
-      headers: this.headers,
-    }).then(this._processResponse);
+    return fetch(`${this._baseUrl}/users/me`, {
+      headers: this._headers,
+    }).then(this._checkResponse);
   }
-
   setUserInfo({ name, about }) {
-    return fetch(`${this.baseUrl}/users/me`, {
-      method: "PATCH",
-      headers: this.headers,
+    return fetch(`${this._baseUrl}/users/me`, {
+      headers: this._headers,
+      method: 'PATCH',
       body: JSON.stringify({
         name: name,
         about: about,
       }),
-    }).then(this._processResponse);
+    }).then(this._checkResponse);
   }
-
-  setUserAvatar({ avatar }) {
-    return fetch(`${this.baseUrl}/users/me/avatar`, {
-      method: "PATCH",
-      headers: this.headers,
-      body: JSON.stringify({
-        avatar,
-      }),
-    }).then(this._processResponse);
-  }
-
-  addCard(data) {
-    return fetch(`${this.baseUrl}/cards`, {
-      method: "POST",
-      headers: this.headers,
+  createCard(data) {
+    return fetch(`${this._baseUrl}/cards`, {
+      headers: this._headers,
+      method: 'POST',
       body: JSON.stringify(data),
-    }).then(this._processResponse);
+    }).then(this._checkResponse);
+  }
+  deleteCard(cardId) {
+    return fetch(`${this._baseUrl}/cards/${cardId}`, {
+      headers: this._headers,
+      method: 'DELETE',
+    }).then(this._checkResponse);
   }
 
-  removeCard(id) {
-    return fetch(`${this.baseUrl}/cards/${id}`, {
-      method: "DELETE",
-      headers: this.headers,
-    }).then(this._processResponse);
+  changeLikeCardStatus(cardId, isLiked) {
+    if (!isLiked) {
+      return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+        headers: this._headers,
+        method: 'DELETE',
+      }).then(this._checkResponse);
+    } else {
+      return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+        headers: this._headers,
+        method: 'PUT',
+      }).then(this._checkResponse);
+    }
   }
 
-  cardLike(id, isLiked) {
-    const method = isLiked ? "DELETE" : "PUT";
-    return fetch(`${this.baseUrl}/cards/${id}/likes`, {
-      method: method,
-      headers: this.headers,
-    }).then(this._processResponse);
+  setUserAvatar(url) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      headers: this._headers,
+      method: 'PATCH',
+      body: JSON.stringify({
+        avatar: url,
+      }),
+    }).then(this._checkResponse);
   }
+
+  // other methods for working with the API
 }
 
-const api = new Api({ baseUrl, headers });
-
+const api = new Api({
+  baseUrl: 'https://react-around-api-full-five.vercel.app/v1/cohort-3-en', //cohort-3-en
+  headers: {
+    authorization: 'f0c06eb5-f66f-4f1d-b700-3920553239f3',
+    'Content-Type': 'application/json',
+  },
+});
 export default api;

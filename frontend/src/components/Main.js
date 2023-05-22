@@ -1,65 +1,62 @@
-import React, { useContext } from "react";
-import Card from "./Card";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import React, { useContext } from 'react';
+import Card from './Card';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Main({
-  onEditAvatarClick,
+const Main = ({
+  onCardLike,
+  cards,
   onEditProfileClick,
+  onEditAvatarClick,
   onAddPlaceClick,
   onCardClick,
-  onCardLike,
-  onCardDelete,
-  cards,
-}) {
+  onDeleteClick,
+}) => {
   const currentUser = useContext(CurrentUserContext);
 
   return (
-    <main className="content">
-      <section className="profile">
-        <div className="profile__image-overlay" onClick={onEditAvatarClick}>
+    <main className='content'>
+      <section className='profile'>
+        <div onClick={onEditAvatarClick} className='profile__image-container'>
           <img
-            className="profile__image"
             src={currentUser.avatar}
-            alt="User's Profile Pic"
+            alt='Profile Picture'
+            className='profile__image'
           />
         </div>
-        <div className="profile__info">
-          <div className="profile__person">
-            <h1 className="profile__name">{currentUser.name}</h1>
-
+        <div className='profile__info'>
+          <div className='profile__person'>
+            <h1 className='profile__name'>{currentUser.name}</h1>
             <button
-              className="profile__edit-button"
-              type="button"
-              aria-label="open-edit-profile-modal"
               onClick={onEditProfileClick}
+              className='profile__edit-button'
+              type='button'
             />
           </div>
-          <p className="profile__description">{currentUser.about}</p>
+          <p className='profile__title'>{currentUser.about}</p>
         </div>
         <button
-          className="profile__add-button"
-          type="button"
-          aria-label="open-new-card-modal"
           onClick={onAddPlaceClick}
+          className='profile__add-button'
+          type='button'
         />
       </section>
-
-      <section className="postcards">
-        <ul className="postcards__list">
-          {cards.map((card) => (
-            <Card
-              key={card._id}
-              likesCounter={card.likes.length}
-              onCardClick={onCardClick}
-              onCardDelete={onCardDelete}
-              onCardLike={onCardLike}
-              card={card}
-            />
-          ))}
+      <section className='cards'>
+        <ul className='cards__list'>
+          {cards.map((card) => {
+            return (
+              <Card
+                card={card}
+                key={card._id}
+                onCardClick={onCardClick}
+                onDeleteClick={onDeleteClick}
+                onLikeCard={onCardLike}
+              />
+            );
+          })}
         </ul>
       </section>
     </main>
   );
-}
+};
 
 export default Main;

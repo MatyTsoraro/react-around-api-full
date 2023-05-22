@@ -4,6 +4,7 @@ import unsuccessfulIcon from '../images/icons/unsuccessful_icon.svg';
 
 import Popup from './Popup';
 
+//a modal window component that informs the user whether they've been registered successfully
 const InfoTooltip = ({ isOpen, onClose, type }) => {
   const success = type === 'successful';
 
@@ -14,7 +15,7 @@ const InfoTooltip = ({ isOpen, onClose, type }) => {
       }, 3500);
       return () => clearTimeout(timer);
     }
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   return (
     <Popup isOpen={isOpen} name='tooltip' onClose={onClose}>
