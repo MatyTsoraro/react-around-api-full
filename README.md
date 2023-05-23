@@ -47,7 +47,7 @@ Third party libraries: cors, limiter, helmet, jwt, celebrate, and joi.
 **Links**
 
 # DEPLOYMENT
-react-around-api-full-msingdwc5-matytsoraro.vercel.app
+https://react-around-api-1.vercel.app/react-around-auth
 # DOMAINS
 react-around-api-full-tau.vercel.app
 react-around-api-full-tau.vercel.app
