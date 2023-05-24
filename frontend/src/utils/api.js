@@ -72,7 +72,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'https://react-around-api-full-five.vercel.app/v1/cohort-3-en', //cohort-3-en
+  baseUrl: 'https://react-around-api-full-five.vercel.app/v1', //cohort-3-en
   headers: {
     authorization: 'f0c06eb5-f66f-4f1d-b700-3920553239f3',
     'Content-Type': 'application/json',
