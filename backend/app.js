@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const router = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 
-// const { requestLogger, errorLogger } = require('./middleware/logger');
+const { requestLogger, errorLogger } = require('./middleware/logger');
 
 const { apiLimiter } = require('./utils/rateLimit');
 
