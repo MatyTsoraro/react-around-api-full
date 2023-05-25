@@ -44,16 +44,8 @@ Third party libraries: cors, limiter, helmet, jwt, celebrate, and joi.
 - Centralized error handling for the back end.
 - BEM methodology in the css classification for each component.
 
-**Links**
 
-# DEPLOYMENT
-https://react-around-api-1.vercel.app/react-around-auth
+
+
 # DOMAINS
-react-around-api-full-tau.vercel.app
-react-around-api-full-tau.vercel.app
-react-around-api-full-git-main-matytsoraro.vercel.app
-react-around-api-full-msingdwc5-matytsoraro.vercel.app
-
-Frontend repo - [https://github.com/MatyTsoraro/react-around-auth]
-
-Backend repo - [https://github.com/MatyTsoraro/around-express]
+https://react-around-api-full-five.vercel.app
