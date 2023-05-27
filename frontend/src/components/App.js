@@ -251,7 +251,7 @@ function App() {
   }
 
   return (
-    <div className='body'>
+    <div className="body">
       <CurrentUserContext.Provider value={currentUser}>
         <Header
           loggedIn={loggedIn}
@@ -261,7 +261,7 @@ function App() {
         <Switch>
           <ProtectedRoute
             exact
-            path='/react-around-auth'
+            path="/react-around-auth"
             loggedIn={loggedIn}
             isCheckingToken={isCheckingToken}
           >
@@ -272,22 +272,22 @@ function App() {
               onCardClick={handleCardClick}
               onDeleteClick={handleDeleteClick}
               onCardLike={handleCardLike}
-              cards={cards}
+              cards={cards.length > 0 ? cards : []}
             />
           </ProtectedRoute>
-          <Route path='/signup'>
+          <Route path="/signup">
             <Register handleRegister={handleRegister} />
           </Route>
 
-          <Route path='/signin'>
+          <Route path="/signin">
             <Login handleLogin={handleLogin} isLoading={isLoading} />
           </Route>
 
           <Route>
             {loggedIn ? (
-              <Redirect to='/react-around-auth' />
+              <Redirect to="/react-around-auth" />
             ) : (
-              <Redirect to='/signin' />
+              <Redirect to="/signin" />
             )}
           </Route>
         </Switch>
@@ -298,7 +298,7 @@ function App() {
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
           isLoading={isLoading}
-          name='avatar'
+          name="avatar"
         />
         <AddPlacePopup
           isLoading={isLoading}
@@ -326,14 +326,14 @@ function App() {
           card={selectedCard}
           isOpen={isImagePreviewOpen}
           onClose={closeAllPopups}
-          name='popup__preview-container'
+          name="popup__preview-container"
         />
         <InfoTooltip
           isOpen={isInfoTooltipOpen}
           onClose={closeAllPopups}
           type={infoTooltipType}
           isTooltipOpen={isInfoTooltipOpen}
-          name='tooltip'
+          name="tooltip"
         />
       </CurrentUserContext.Provider>
     </div>
