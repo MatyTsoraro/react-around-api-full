@@ -9,6 +9,7 @@
     "function-paren-newline": "off",
     "object-curly-newline": "off",
     "newline-per-chained-call": "off",
+     "no-console": "off",
     "eqeqeq": "off",
     "func-names": "off",
     "no-shadow": "off",
