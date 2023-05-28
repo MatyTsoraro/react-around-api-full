@@ -11,16 +11,19 @@ class Api {
   }
 
   getInitialCards() {
+    console.log('this._headers', this._headers);
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
     }).then(this._checkResponse);
   }
   getUserInfo() {
+    console.log('this._headers', this._headers);
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
     }).then(this._checkResponse);
   }
   setUserInfo({ name, about }) {
+    console.log('this._headers', this._headers);
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
       method: 'PATCH',
@@ -31,6 +34,7 @@ class Api {
     }).then(this._checkResponse);
   }
   createCard(data) {
+    console.log('this._headers', this._headers);
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
       method: 'POST',
@@ -38,6 +42,7 @@ class Api {
     }).then(this._checkResponse);
   }
   deleteCard(cardId) {
+    console.log('this._headers', this._headers);
     return fetch(`${this._baseUrl}/cards/${cardId}`, {
       headers: this._headers,
       method: 'DELETE',
@@ -45,6 +50,7 @@ class Api {
   }
 
   changeLikeCardStatus(cardId, isLiked) {
+    console.log('this._headers', this._headers);
     if (!isLiked) {
       return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
         headers: this._headers,
@@ -59,6 +65,7 @@ class Api {
   }
 
   setUserAvatar(url) {
+    console.log('this._headers', this._headers);
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       headers: this._headers,
       method: 'PATCH',
